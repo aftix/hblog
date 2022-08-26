@@ -1,5 +1,6 @@
 ---
 title: "Bacon"
+author: "aftix"
 description: "An Overview of Mathematical Methods"
 date: 2022-08-17T12:52:18-05:00
 draft: false

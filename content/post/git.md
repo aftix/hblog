@@ -1,5 +1,6 @@
 ---
 title: "Git"
+author: "aftix"
 description: "Begone, github"
 date: 2022-08-17T12:52:07-05:00
 draft: false
