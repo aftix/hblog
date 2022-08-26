@@ -1,7 +1,8 @@
 ---
 title: "Bacon"
+description: "An Overview of Mathematical Methods"
 date: 2022-08-17T12:52:18-05:00
-draft: true
+draft: false
 ---
 
 # Scientific Computing in Rust
@@ -720,14 +721,14 @@ are a special case of differential equation, so you should use specialized algor
 
 To start off with, take a function like so:
 
-![function](/_/imgs/function.png)
+![function](/imgs/function.png)
 
 To find the area under the curve, there are some simple solutions. Two easy ones are
 the right- and left-rectangle rules:
 
-![right-rectangle rule](/_/imgs/right_rectangle.png)
+![right-rectangle rule](/imgs/right_rectangle.png)
 
-![left-rectangle rule](/_/imgs/left_rectangle.png)
+![left-rectangle rule](/imgs/left_rectangle.png)
 
 Mathematically, this becomes
 \\[
@@ -740,7 +741,7 @@ and
 
 A better approach is to use the trapezoidal rule:
 
-![trapezoidal rule](/_/imgs/trapezoid.png)
+![trapezoidal rule](/imgs/trapezoid.png)
 
 Mathematically, this is
 \\[
@@ -751,7 +752,7 @@ There is also Simpson's rule, which uses an approximating parabola instead.
 An easy way to improve accuracy is to break the interval up into smaller subintervals, turning
 a rule into a composite rule like so:
 
-![composite trapezoidal rule](/_/imgs/composite_trapezoid.png)
+![composite trapezoidal rule](/imgs/composite_trapezoid.png)
 
 Mathematically, the composite trapezoidal rule is with step size \\(h\\) is:
 \\[
@@ -801,7 +802,7 @@ is double exponential, the limits on the sum can be made finite without much los
 precision. In `bacon-sci`, the sum is done from -3 to 3, which is correct within
 \\(1 \times 10^{-12}\\).  For example, the transformed function from before looks like:
 
-![tanh-sinh integration](/_/imgs/tanhsinh.png)
+![tanh-sinh integration](/imgs/tanhsinh.png)
 
 This method is called Tanh-Sinh integration. The weights and evaluation
 points are precomputed and stored in a lookup table. The trapezoidal rule is

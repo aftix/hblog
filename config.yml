@@ -1,0 +1,39 @@
+baseURL: "https://aftix.xyz/"
+languageCode: "en-us"
+copyright: "Wyatt Campbell"
+title: "Aftix's Dominion"
+theme: ghostwriter
+
+params:
+  mainsections:
+    - post
+  intro: true
+  headline: "Aftix's Dominion"
+  description: "A look into my mind"
+  github: "https://github.com/aftix"
+  gitlab: "https://gitlab.com/aftix"
+  linkedin: ""
+  email: aftix@aftix.xyz
+  opengraph: true
+  shareTwitter: true
+  readingTime: false
+  dateFormat: "Mon, Jan 2, 2006"
+  rss: true
+
+permalinks:
+  post: "/:filename/"
+
+menu:
+  main:
+    - name: Blog
+      url: /
+      weight: 1
+    - name: Projects
+      url: /projects/
+      weight: 2
+    - name: About
+      url: /about/
+      weight: 3
+    - name: Contact
+      url: /contact/
+      weight: 4
