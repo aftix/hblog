@@ -1,0 +1,13 @@
+.hero {
+    padding: 0;
+    position: absolute;
+    top: -3rem;
+    left: 30%;
+    width: 40%;
+    height: 19rem;
+    opacity: 0.7;
+}
+
+.post-header {
+    color: black;
+}
