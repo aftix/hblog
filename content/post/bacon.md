@@ -104,15 +104,15 @@ equations can be reduced to first-order by thinking of each derivative
 as a new variable. The initial condition is then represented as
 \\[ \\vec{y}(t_0) = \\vec{y}_0 \\]
 
-These equations immediatly lead to the first algorithm
+These equations immediately lead to the first algorithm
 for solving initial value problems, Euler's method. Consider
-this question: given a timestep \\( \Delta t \\), what is the
+this question: given a time-step \\( \Delta t \\), what is the
 corresponding \\( \\Delta \\vec{y} \\)? We can approximate
 \\( \\Delta \\vec{y} / \\Delta t \\approx \\mathrm{d}\\vec{y}/\\mathrm{d}t = f(t, \\vec{y}) \\),
 (that is, use the tangent line to estimate the function),
 leading to \\( \Delta \\vec{y} = f(t, \\vec{y} )\\Delta t \\). This gives us an iterative
 algorithm, \\( \\vec{y}\_{i + 1} = \\vec{y}\_{i} + f(t, \\vec{y})\\Delta t \\). This
-is Euler's method. From the starting conditions, pick a timestep and iterate until
+is Euler's method. From the starting conditions, pick a time-step and iterate until
 you reach the end.
 
 So how good is Euler's method? Not very good. As an example, imagine solving
@@ -147,18 +147,18 @@ where the powers of our vectors are done element-wise. Additionally, Taylor's Th
 bounds the error via some small parameters \\(\\xi, \\mu\\).
 In this light, we can say Euler's method is a zeroth order approximation, which is
 why the error is linear. You can use Taylor polynomials for better IVP solvers, but
-this requries information about the derivatives of \\(f\\). Instead, Runge-Kutta
+this requires information about the derivatives of \\(f\\). Instead, Runge-Kutta
 methods allow for tighter error bounds without using the derivative.
 
-To see an example of this, I will derivethe midpoint method here. Imagine for a
-moment that instead of taking a full timestep, you take a partial timestep and use
+To see an example of this, I will derive the midpoint method here. Imagine for a
+moment that instead of taking a full time-step, you take a partial time-step and use
 \\(f\\) at that point to approximate the second Taylor polynomial. That is, choose
 a \\(a_1, \\alpha\_1, \\beta\_1\\) so that \\(a\_1 f(t + \\alpha\_1, \\vec{y} + \\beta\_1)\\)
 approximates
 \\[
     T^{(2)}(t, \\vec{y}) = f(t, \\vec{y}) + \\frac{h}{2}f'(t, \\vec{y}),
 \\]
-where \\(h\\) is the timestep, with quadratic error in the timestep.
+where \\(h\\) is the time-step, with quadratic error in the time-step.
 Note that \\(f'(t, y) = \\partial f/\\partial t(t, \\vec{y})
 \+ \\partial f/\\partial \\vec{y}(t, \\vec{y}) \\vec{y}'(t) \\).
 Thus,

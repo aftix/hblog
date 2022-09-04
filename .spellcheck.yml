@@ -1,0 +1,24 @@
+spellchecker: aspell
+
+matrix:
+- name: markdown
+  sources:
+  - content/**/*.md
+  aspell:
+    lang: en
+    d: en_US
+  dictionary:
+    wordlists:
+      - .dictionary.txt
+    output: .markdown.dict
+  pipeline:
+  - pyspelling.filters.markdown:
+  - pyspelling.filters.html:
+      comments: false
+      attributes:
+      - title
+      - alt
+      ignores:
+      - code
+      - pre
+  - pyspelling.filters.url:

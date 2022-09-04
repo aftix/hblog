@@ -1,5 +1,5 @@
 ---
-title: "Ryebread"
+title: "Rye bread"
 author: "aftix"
 description: "Testing a new recipe"
 date: 2020-09-12
