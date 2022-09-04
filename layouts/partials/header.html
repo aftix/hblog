@@ -35,7 +35,7 @@
 
         <div id="wrapper">
             <header class="site-header">
-                <img src="imgs/cat.jpg" alt="A cute cate lounging about" class="hero" />
+                <img src="/imgs/cat.jpg" alt="A cute cate lounging about" class="hero" />
                 <div class="container">
                     <div class="site-title-wrapper">
                         {{ with .Site.Params.logo }}
@@ -102,3 +102,6 @@
             </header>
 
             <div id="container">
+
+                <div id="post-index" class="container">
+                    {{ partial "intro.html" . }}

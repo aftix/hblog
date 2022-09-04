@@ -22,3 +22,7 @@
 .post-header {
     color: beige;
 }
+
+.post-container .post-header {
+    color: black;
+}
