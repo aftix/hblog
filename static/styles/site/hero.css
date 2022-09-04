@@ -23,6 +23,7 @@
     color: beige;
 }
 
-.post-container .post-header {
+.post-container .post-header,
+#post-index #post-index .post-header {
     color: black;
 }
