@@ -177,6 +177,22 @@ Now, any entities can have `Name` and `Age`, but only a `Person` will send a gre
 
 ## Introduction to Rendering
 
+It's 2022. Let's have some graphics in our game. The way we'll do this
+is with plugins. In Bevy, a plugin is just a type that adds its own systems
+and plugins to the app. Bevy has a default plugin bundle, which we'll use
+to get a window up and running (among other things).
+
+```rust
+fn main() {
+    App::new()
+        .add_plugins(DefaultPlugins)
+        .add_startup_system(say_hello)
+        .add_startup_system(setup)
+        .add_system(person_greet)
+        .run();
+}
+```
+
 ## Introduction to States
 
 ## Main Menu UI

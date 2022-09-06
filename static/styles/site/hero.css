@@ -27,3 +27,7 @@
 #post-index #post-index .post-header {
     color: black;
 }
+
+.site-nav-item a {
+    color: teal !important;
+}
