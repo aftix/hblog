@@ -1,0 +1,26 @@
+name: Deploy blog
+
+on:
+  workflow_run:
+    workflows: ['Spellcheck']
+    branches: ['master']
+    types:
+      - completed
+
+jobs:
+  deploy:
+    name: Deploy blog to site
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Create ssh key from repository secret
+        run: |
+          install -m 600 -D /dev/stdin ~/.ssh/id_ed25519 <<< "${{ secrets.WWW_PRIVATE_KEY }}"
+
+      - name: Add blog site fingerprint to known ssh hosts
+        run: ssh-keyscan -H aftix.xyz > ~/.ssh/known_hosts
+
+      - name: Run deployment script on VPS as www-data
+        run: ssh www-data@aftix.xyz 'sh -s' <<< "$DEPLOY_SCRIPT"
+        env:
+          DEPLOY_SCRIPT: ${{ secrets.DEPLOY_SCRIPT }}
