@@ -16,3 +16,6 @@ footer {
   flex-shrink: 0;
 }
 
+.highlight code {
+  background-color: inherit;
+}
