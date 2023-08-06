@@ -13,7 +13,6 @@
         <meta name="robots" content="index,follow">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{ if .Site.Params.opengraph }}{{ partial "opengraph.html" . }}{{ end }}
-        <link rel="stylesheet" href="{{ .Site.BaseURL }}styles/site/hero.css">
         <link rel="stylesheet" href="{{ .Site.BaseURL }}dist/site.css">
         <link rel="stylesheet" href="{{ .Site.BaseURL }}dist/syntax.css">
         <link rel="stylesheet" href="{{ .Site.BaseURL }}styles/site/fix.css">
@@ -36,7 +35,6 @@
 
         <div id="wrapper">
             <header class="site-header">
-                <img src="/imgs/cat.jpg" alt="A cute cate lounging about" class="hero" />
                 <div class="container">
                     <div class="site-title-wrapper">
                         {{ with .Site.Params.logo }}
@@ -105,4 +103,3 @@
             <div id="container">
 
                 <div id="post-index" class="container">
-                    {{ partial "intro.html" . }}

@@ -19,3 +19,7 @@ footer {
 .highlight code {
   background-color: inherit;
 }
+
+.site-header {
+  background: #303030;
+}
