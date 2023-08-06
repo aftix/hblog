@@ -23,3 +23,7 @@ footer {
 .site-header {
   background: #303030;
 }
+
+.katex-display > .katex {
+  white-space: normal !important;
+}
