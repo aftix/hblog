@@ -1,4 +1,4 @@
-FROM betterweb/hugo:latest
+FROM betterweb/hugo:extended-0.121.1-21-1.21.5
 
 VOLUME ["/public"]
 COPY . /build
