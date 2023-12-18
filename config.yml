@@ -1,27 +1,37 @@
-baseURL: "https://aftix.xyz/"
-languageCode: "en-us"
-copyright: "Wyatt Campbell"
-title: "Aftix's Dominion"
+baseURL: https://aftix.xyz/
+languageCode: en-us
+copyright: Wyatt Campbell
+title: Aftix's Dominion
 theme: ghostwriter
 
 params:
   mainsections:
     - post
   intro: true
-  headline: "Aftix's Dominion"
-  description: "A look into my mind"
-  github: "https://github.com/aftix"
-  gitlab: "https://gitlab.com/aftix"
+  headline: Aftix's Dominion
+  description: A look into my mind
+  github: https://github.com/aftix
+  gitlab: https://gitlab.com/aftix
   linkedin: ""
   email: aftix@aftix.xyz
   opengraph: true
   shareTwitter: true
   readingTime: false
-  dateFormat: "Mon, Jan 2, 2006"
+  dateFormat: Mon, Jan 2, 2006
   rss: true
 
+security:
+  enableInlineShortcodes: true
+
 permalinks:
-  post: "/:filename/"
+  post: /:filename/
+
+module:
+  imports:
+    - path: github.com/KaTeX/KaTeX
+      mounts:
+        source: fonts
+        target: assets/fonts
 
 menu:
   main:

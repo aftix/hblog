@@ -1,0 +1,22 @@
+{
+  "name": "hblog",
+  "version": "1.0.0",
+  "main": "render_katex.js",
+  "repository": "https://github.com/aftix/hblog",
+  "homepage": "https://aftix.xyz",
+  "author": "aftix <aftix@aftix.xyz>",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@types/katex": "^0.16.7",
+    "@types/node": "^20.10.5",
+    "katex": "0.16.9"
+  },
+  "scripts": {
+    "render": "node dist/render_katex.js"
+  },
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "typescript": "^5.3.3"
+  }
+}

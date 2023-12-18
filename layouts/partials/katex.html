@@ -1,0 +1,4 @@
+{{- if .Store.Get "hasKaTeX" }}
+  {{- $css := partialCached "katex-fonts.html" . }}
+{{- end }}
+

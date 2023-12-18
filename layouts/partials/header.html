@@ -24,10 +24,11 @@
         <link href="{{ with .OutputFormats.Get " RSS" }}{{ .RelPermalink }}{{ end }}" rel="alternate"
             type="application/rss+xml">
         {{ end }}
-        {{ partial "extra-in-head.html" . }}
         {{ partial "exponea.html" . }}
         {{ partial "fathom.html" . }}
         {{ partial "plausible.html" . }}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+        {{ partial "katex.html" . }}
     </head>
 
     <body>

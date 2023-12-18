@@ -1,0 +1,7 @@
+{{- .Page.Store.Set "hasKaTeX" true }}
+{{- if not (.Get 0) }}
+{{- errorf "Shortcode %q needs latex hash argument, see %s." .Name .Position }}
+{{- end }}
+
+{{- $partial := printf "rendered-latex/%s-inline.html" (.Get 0) }}
+{{- partialCached $partial . }}
