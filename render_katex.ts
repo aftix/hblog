@@ -7,7 +7,7 @@ import katex from 'katex'
 
 const hashAlgo = getHashes()[0]
 
-const mathRegexp = /!LATEX\s+(?<inline>inline\s+)?(.+?(?=!LATEX!))!LATEX!/sg
+const mathRegexp = /!LATEX(?<inline>~\s+)?(.+?(?=!LATEX!))!LATEX!/sg
 
 function replaceRegex(_str: string, inline: string|undefined, latex: string) {
   const hasher = createHash(hashAlgo)
