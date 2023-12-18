@@ -21,6 +21,13 @@ jobs:
         run: ssh-keyscan -H aftix.xyz > ~/.ssh/known_hosts
 
       - name: Run deployment script on VPS as www-data
-        run: ssh www-data@aftix.xyz 'sh -s' <<< "$DEPLOY_SCRIPT"
+        run: ssh www-data@aftix.xyz 'sh -sl' <<< "$DEPLOY_SCRIPT"
         env:
-          DEPLOY_SCRIPT: ${{ secrets.DEPLOY_SCRIPT }}
+          DEPLOY_SCRIPT: >-
+            cd $HOME ;
+            cd aftix.xyz ;
+            git pull ;
+            yarn ;
+            yarn run tsc ;
+            yarn run render ;
+            hugo

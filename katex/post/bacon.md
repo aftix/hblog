@@ -81,7 +81,7 @@ or complex. To do this, I used `TypeId::of::<N::RealField>() == TypeId::of::<N>(
 If `N` was real, converting from complex was easy: use `ComplexField::from_real` on
 the real component, ignoring the imaginary. On the other hand, if `N` was complex,
 the conversion needed to preserve the imaginary component. `ComplexField` has no
-`from_imaginary`, so I directly implemented \\( a + bi \\) with
+`from_imaginary`, so I directly implemented !LATEX inline a + bi !LATEX! with
 `ComplexField::from_real(z.re) + (-ComplexField::one()).sqrt() * ComplexField::from_real(z.im)`,
 with `z` being the definitely complex value.
 
@@ -97,21 +97,21 @@ problems or `ivp` in the code.
 
 Abstractly, the system of differential equations can be written, with an arrow
 representing a vector quantity, as
-\\[ \\frac{\\mathrm{d}\\vec{y}}{\\mathrm{d}t} = f(t, \\vec{y}) . \\]
+!LATEX \frac{\mathrm{d}\vec{y}}{\mathrm{d}t} = f(t, \vec{y}) . !LATEX!
 This is a first-order system of differential equations since
 only the first derivative is present. Generally, many higher-order
 equations can be reduced to first-order by thinking of each derivative
 as a new variable. The initial condition is then represented as
-\\[ \\vec{y}(t_0) = \\vec{y}_0 \\]
+!LATEX \vec{y}(t_0) = \vec{y}_0 !LATEX!
 
 These equations immediately lead to the first algorithm
 for solving initial value problems, Euler's method. Consider
-this question: given a time-step \\( \Delta t \\), what is the
-corresponding \\( \\Delta \\vec{y} \\)? We can approximate
-\\( \\Delta \\vec{y} / \\Delta t \\approx \\mathrm{d}\\vec{y}/\\mathrm{d}t = f(t, \\vec{y}) \\),
+this question: given a time-step !LATEX inline \Delta t !LATEX!, what is the
+corresponding !LATEX inline \Delta \vec{y} !LATEX!? We can approximate
+!LATEX inline \Delta \vec{y} / \Delta t \approx \mathrm{d}\vec{y}/\mathrm{d}t = f(t, \vec{y}) !LATEX!,
 (that is, use the tangent line to estimate the function),
-leading to \\( \Delta \\vec{y} = f(t, \\vec{y} )\\Delta t \\). This gives us an iterative
-algorithm, \\( \\vec{y}\_{i + 1} = \\vec{y}\_{i} + f(t, \\vec{y})\\Delta t \\). This
+leading to !LATEX inline \Delta \vec{y} = f(t, \vec{y} )\Delta t !LATEX!. This gives us an iterative
+algorithm, !LATEX inline \vec{y}_{i + 1} = \vec{y}_{i} + f(t, \vec{y})\Delta t !LATEX!. This
 is Euler's method. From the starting conditions, pick a time-step and iterate until
 you reach the end.
 
@@ -133,70 +133,70 @@ One problem with Euler's method is that the error in each step is linear in the
 step size. We can do better. To start with, remember Taylor series from
 basic calculus. That is, remember you can approximate a function of one
 variable like
-\\[
-    f(x) = f(x\_0) + f'(x\_0) (x - x\_0) + \\frac{f''(x\_0)}{2} {(x - x\_0)}^2 + \\ldots .
-\\]
+!LATEX
+    f(x) = f(x_0) + f'(x_0) (x - x_0) + \frac{f''(x_0)}{2} {(x - x_0)}^2 + \ldots .
+!LATEX!
 Similarly, we can approximate our derivative function from the last section with
-\\[
-    f(t, \\vec{y}) = f(t_0, \\vec{y}\_0)
-    \+ \left((t - t\_0)\\frac{\\partial f}{\\partial t}(t\_0, \\vec{y}_0)
-    \+(\\vec{y} - \\vec{y}\_0)\\frac{\\partial f}{\\partial \\vec{y}}(t\_0, \\vec{y}\_0)\right)
-    \+ \\ldots ,
-\\]
+!LATEX
+    f(t, \vec{y}) = f(t_0, \vec{y}_0)
+    + \left((t - t_0)\frac{\partial f}{\partial t}(t_0, \vec{y}_0)
+    +(\vec{y} - \vec{y}_0)\frac{\partial f}{\partial \vec{y}}(t_0, \vec{y}_0)\right)
+    + \ldots ,
+!LATEX!
 where the powers of our vectors are done element-wise. Additionally, Taylor's Theorem
-bounds the error via some small parameters \\(\\xi, \\mu\\).
+bounds the error via some small parameters !LATEX inline \xi, \mu!LATEX!.
 In this light, we can say Euler's method is a zeroth order approximation, which is
 why the error is linear. You can use Taylor polynomials for better IVP solvers, but
-this requires information about the derivatives of \\(f\\). Instead, Runge-Kutta
+this requires information about the derivatives of !LATEX inline f!LATEX!. Instead, Runge-Kutta
 methods allow for tighter error bounds without using the derivative.
 
 To see an example of this, I will derive the midpoint method here. Imagine for a
 moment that instead of taking a full time-step, you take a partial time-step and use
-\\(f\\) at that point to approximate the second Taylor polynomial. That is, choose
-a \\(a_1, \\alpha\_1, \\beta\_1\\) so that \\(a\_1 f(t + \\alpha\_1, \\vec{y} + \\beta\_1)\\)
+!LATEX inline f!LATEX! at that point to approximate the second Taylor polynomial. That is, choose
+a !LATEX inline a_1, \alpha_1, \beta_1!LATEX! so that !LATEX inline a_1 f(t + \alpha_1, \vec{y} + \beta_1)!LATEX!
 approximates
-\\[
-    T^{(2)}(t, \\vec{y}) = f(t, \\vec{y}) + \\frac{h}{2}f'(t, \\vec{y}),
-\\]
-where \\(h\\) is the time-step, with quadratic error in the time-step.
-Note that \\(f'(t, y) = \\partial f/\\partial t(t, \\vec{y})
-\+ \\partial f/\\partial \\vec{y}(t, \\vec{y}) \\vec{y}'(t) \\).
+!LATEX
+    T^{(2)}(t, \vec{y}) = f(t, \vec{y}) + \frac{h}{2}f'(t, \vec{y}),
+!LATEX!
+where !LATEX inline h!LATEX! is the time-step, with quadratic error in the time-step.
+Note that !LATEX inline f'(t, y) = \partial f/\partial t(t, \vec{y})
++ \partial f/\partial \vec{y}(t, \vec{y}) \vec{y}'(t) !LATEX!.
 Thus,
-\\[
-    T^{(2)} = f(t, \\vec{y}) + \\frac{h}{2}\\frac{\\partial f}{\\partial t}f(t, \\vec{y})
-    \+ \\frac{h}{2}\\frac{\\partial f}{\\partial \\vec{y}}(t, \\vec{y}) f(t, \\vec{y}) .
-\\]
-Expanding \\(a\_1 f(t + \\alpha\_1, \\vec{y} + \\beta\_1)\\) via Taylor series gives
-\\[
-    a\_1 f(t, \\vec{y}) + a\_1 \\alpha\_1 \\frac{\\partial f}{\\partial t}(t, \\vec{y})
-    \+ a\_1\\beta\_1 \\frac{\partial f}{\\partial y}(t, y) .
-\\]
-Thus, \\(a\_1 = 1\\), \\(a\_1 \\alpha\_1 = h/2\\), and \\(a\_1 \\beta\_1 =
-f(t, \\vec{y}) h / 2\\). This uniquely determines the coefficients, giving rise to
+!LATEX
+    T^{(2)} = f(t, \vec{y}) + \frac{h}{2}\frac{\partial f}{\partial t}f(t, \vec{y})
+    + \frac{h}{2}\frac{\partial f}{\partial \vec{y}}(t, \vec{y}) f(t, \vec{y}) .
+!LATEX!
+Expanding !LATEX inline a_1 f(t + \alpha_1, \vec{y} + \beta_1)!LATEX! via Taylor series gives
+!LATEX
+    a_1 f(t, \vec{y}) + a_1 \alpha_1 \frac{\partial f}{\partial t}(t, \vec{y})
+    + a_1\beta_1 \frac{\partial f}{\partial y}(t, y) .
+!LATEX!
+Thus, !LATEX inline a_1 = 1!LATEX!, !LATEX inline a_1 \alpha_1 = h/2!LATEX!, and !LATEX inline a_1 \beta_1 =
+f(t, \vec{y}) h / 2!LATEX!. This uniquely determines the coefficients, giving rise to
 the midpoint method:
-\\[
-    \\vec{y}\_{i + 1} = \\vec{y}\_i + hf\\left(t\_i + \\frac{h}{2}, \\vec{y}\_i + \\frac{h}{2}f\\left(t\_i, \\vec{y}\_i\\right)\\right) .
-\\]
+!LATEX
+    \vec{y}_{i + 1} = \vec{y}_i + hf\left(t_i + \frac{h}{2}, \vec{y}_i + \frac{h}{2}f\left(t_i, \vec{y}_i\right)\right) .
+!LATEX!
 
 This process can be repeated for higher order polynomials. The classic
 Runge-Kutta method is order 4, and is used as follows:
-\\[
-    \\vec{k}\_1 = hf(t\_i, \\vec{y}\_i),
-\\]
-\\[
-    \\vec{k}\_2 = hf\\left(t\_i + \\frac{h}{2}, \\vec{y}\_i + \\frac{1}{2}\\vec{k}\_1\\right),
-\\]
-\\[
-    \\vec{k}\_3 = hf\\left(t\_i + \\frac{h}{2}, \\vec{y}\_i + \\frac{1}{2}\\vec{k}\_2\\right),
-\\]
-\\[
-    \\vec{k}\_4 = hf(t\_i + h, \\vec{y}\_i + \\vec{k}\_3),
-\\]
-\\[
-    \\vec{y}\_{i+1} = \\vec{y}\_i + \\frac{1}{6}(\\vec{k}\_1 + 2\\vec{k}\_2 + 2\\vec{k}\_3 + \\vec{k}\_4).
-\\]
+!LATEX
+    \vec{k}_1 = hf(t_i, \vec{y}_i),
+!LATEX!
+!LATEX
+    \vec{k}_2 = hf\left(t_i + \frac{h}{2}, \vec{y}_i + \frac{1}{2}\vec{k}_1\right),
+!LATEX!
+!LATEX
+    \vec{k}_3 = hf\left(t_i + \frac{h}{2}, \vec{y}_i + \frac{1}{2}\vec{k}_2\right),
+!LATEX!
+!LATEX
+    \vec{k}_4 = hf(t_i + h, \vec{y}_i + \vec{k}_3),
+!LATEX!
+!LATEX
+    \vec{y}_{i+1} = \vec{y}_i + \frac{1}{6}(\vec{k}_1 + 2\vec{k}_2 + 2\vec{k}_3 + \vec{k}_4).
+!LATEX!
 This is almost what is in `bacon-sci`. Note that Runge-Kutta methods can be described
-by a table of the coefficients of \\(h\\) when added to \\(t\_i\\) for the various
+by a table of the coefficients of !LATEX inline h!LATEX! when added to !LATEX inline t_i!LATEX! for the various
 intermediate steps, the coefficients of each previous intermediate step for an intermediate step,
 and the final weighted average coefficients.
 
@@ -208,11 +208,11 @@ points, but it never remembers those steps. In other words,
 we throw away a lot of useful information. Multistep
 methods solve this problem by retaining information about
 previous steps. In an equation, you can characterize
-an \\(m\\) step method as
-\\[
-    \\vec{y}\_{i+1} = \\sum\_{j=0}^{m-1} a\_{m-1-j}\\vec{y}\_{i-j} +
-    h\\sum\_{j=0}^{m} b\_j f(t\_{i+1-m + j}).
-\\]
+an !LATEX inline m!LATEX! step method as
+!LATEX
+    \vec{y}_{i+1} = \sum_{j=0}^{m-1} a_{m-1-j}\vec{y}_{i-j} +
+    h\sum_{j=0}^{m} b_j f(t_{i+1-m + j}).
+!LATEX!
 Notice that some methods can have a point depend on the derivative at that point. These
 are implicit methods.
 
@@ -222,7 +222,7 @@ method.
 
 ## Adaptive Step Size Methods
 
-Still, all of these methods have a problem. The step size, \\(h\\), is
+Still, all of these methods have a problem. The step size, !LATEX inline h!LATEX!, is
 the same for complicated interesting parts of the solution and
 boring flat parts! Ideally, the step size will be small in the complex
 bits and large in the flat bits to minimize computation time. Enter
@@ -278,8 +278,8 @@ The theory is all well and good, but how do you solve an initial value
 problem with `bacon-sci`? There are currently seven implemented solvers in
 the library: `RK45`, `RK23`, `Adams`, `Adams2`, `BDF`, `BDF2`, and `Euler`. As mentioned
 previously, `IVPSolver` is a trait, so all of these solvers have a shared interface. For this
-example, I'll solve a one-dimensional problem with \\(y(0) = 0\\) using `RK45`. The derivative
-function (that is, \\(f(t, y)\\) is of the form: `fn deriv<T>(t: f64, y: &[f64], params: &mut T) -> Result<VectorN<f64, U1>, String> { ... }`.
+example, I'll solve a one-dimensional problem with !LATEX inline y(0) = 0!LATEX! using `RK45`. The derivative
+function (that is, !LATEX inline f(t, y)!LATEX! is of the form: `fn deriv<T>(t: f64, y: &[f64], params: &mut T) -> Result<VectorN<f64, U1>, String> { ... }`.
 Here, I am using `f64` for both `t` and `y`, but `f32` would work as well (you can even
 have `y` be a `Complex<{float}>` type with `t` being the corresponding real
 float type). In this case, you'd solve the initial value problem in a manner
@@ -309,11 +309,11 @@ function you'll probably want to use.
 
 After initial value problems, the next area of numerical analysis I tackled
 is root finding. What is root finding? It's finding the solutions of
-\\[f(x) = 0, \\]
+!LATEXf(x) = 0, !LATEX!
 for an arbitrary function. In other words, you are finding where a function
 becomes zero. There's a related problem of finding stationary points, that is
 the solutions of
-\\[f(x) = x,\\]
+!LATEXf(x) = x,!LATEX!
 for an arbitrary function. Problems can be easily translated between the two
 domains; however, in `bacon-sci` I have only implemented algorithms for the first
 problem, root finding.
@@ -324,11 +324,11 @@ method, Newton's method, the secant method, and Müller's method for polynomials
 ## Bisection Method
 
 The bisection method is the easiest to understand. It requires two starting points,
-\\(a\\) and \\(b\\), such that the sign of \\(f(a)\\) and the sign of \\(f(b)\\)
+!LATEX inline a!LATEX! and !LATEX inline b!LATEX!, such that the sign of !LATEX inline f(a)!LATEX! and the sign of !LATEX inline f(b)!LATEX!
 are different (if one is zero then you found a root!). Then, the algorithm
-performs a binary search, dividing the interval \\([a,b]\\) in half. At the midpoint,
-the sign of the function is either zero, meaning success, the same as at \\(a\\) or
-the same as at \\(b\\). Thusly, you either get a result or have one new interval
+performs a binary search, dividing the interval !LATEX inline [a,b]!LATEX! in half. At the midpoint,
+the sign of the function is either zero, meaning success, the same as at !LATEX inline a!LATEX! or
+the same as at !LATEX inline b!LATEX!. Thusly, you either get a result or have one new interval
 with differing signs at the end points. This is done recursively until an answer
 is found.
 
@@ -339,38 +339,38 @@ the initial two guesses can be any distance from a root of the function without
 the algorithm failing. I should note here that there's a closely related algorithm
 called the method of false position. In this algorithm, instead of the midpoint,
 you choose the dividing line between two subintervals to be where the line
-from \\(f(a)\\) to \\(f(b)\\) crosses the x axis.
+from !LATEX inline f(a)!LATEX! to !LATEX inline f(b)!LATEX! crosses the x axis.
 
 The bisection method is implemented as `bacon_sci::roots::bisection`.
 
 ## Newton's Method
 
 Newton's method is a more sophisticated method of root finding. To derive it,
-first assume that \\(f\\) is continuous and doubly differentiable on
-\\([a,b]\\). Now, give a starting guess for the root, \\(p\_0\\). Then,
-we can expand \\(f\\) as a Taylor series centered at \\(p\_0\\):
-\\[
-    f(p) = f(p\_0) + (p - p\_0)f'(p\_0) + \\ldots .
-\\]
+first assume that !LATEX inline f!LATEX! is continuous and doubly differentiable on
+!LATEX inline [a,b]!LATEX!. Now, give a starting guess for the root, !LATEX inline p_0!LATEX!. Then,
+we can expand !LATEX inline f!LATEX! as a Taylor series centered at !LATEX inline p_0!LATEX!:
+!LATEX
+    f(p) = f(p_0) + (p - p_0)f'(p_0) + \ldots .
+!LATEX!
 Ignoring the higher order terms,
-\\[
-    f(p) = f(p\_0) + (p - p\_0)f'(p\_0) .
-\\]
-Now, let \\(p\\) be the true root of the function. Thus,
-\\[
-    0 = f(p\_0) + (p - p\_0)f'(p\_0) ,
-\\]
-\\[
-    0 = f(p\_0) + pf'(p\_0) - p\_0f'(p\_0),
-\\]
-\\[
-    pf'(p\_0) = p\_0 f'(p\_0) - f(p\_0),
-\\]
-\\[
-    p = p\_0 - \\frac{f(p\_0)}{f'(p\_0)}.
-\\]
+!LATEX
+    f(p) = f(p_0) + (p - p_0)f'(p_0) .
+!LATEX!
+Now, let !LATEX inline p!LATEX! be the true root of the function. Thus,
+!LATEX
+    0 = f(p_0) + (p - p_0)f'(p_0) ,
+!LATEX!
+!LATEX
+    0 = f(p_0) + pf'(p_0) - p_0f'(p_0),
+!LATEX!
+!LATEX
+    pf'(p_0) = p_0 f'(p_0) - f(p_0),
+!LATEX!
+!LATEX
+    p = p_0 - \frac{f(p_0)}{f'(p_0)}.
+!LATEX!
 Since we ignored higher order terms, this is only an
-approximation of the true root \\(p\\). However,
+approximation of the true root !LATEX inline p!LATEX!. However,
 this is a better approximation than the starting one!
 
 Iterating this equation over and over again until the guess produces a zero of the
@@ -386,18 +386,18 @@ version for polynomials as `bacon_sci::roots::newton_polynomial`.
 ## Secant Method
 
 The secant method is an adaptation of Newton's method to remove the need
-for an explicit derivative. To derive it, imagine calculating \\(p\_{n+1}\\), the
-\\(n+1\\)th iteration of Newton's method. You would need the derivative at
-\\(p\_n\\), but the derivative at that point is just the slope of the tangent line
+for an explicit derivative. To derive it, imagine calculating !LATEX inline p_{n+1}!LATEX!, the
+!LATEX inline n+1!LATEX!th iteration of Newton's method. You would need the derivative at
+!LATEX inline p_n!LATEX!, but the derivative at that point is just the slope of the tangent line
 at that point! This can be approximated by a _secant line_ from the point and a
-nearby point. Luckily, we have a nearby point: \\(p\_{n-1}\\). Thus,
-\\[
-    f'(p\_n) \\approx \\frac{f(p\_n) - f(p\_{n-1})}{p\_n - p\_{n-1}} .
-\\]
+nearby point. Luckily, we have a nearby point: !LATEX inline p_{n-1}!LATEX!. Thus,
+!LATEX
+    f'(p_n) \approx \frac{f(p_n) - f(p_{n-1})}{p_n - p_{n-1}} .
+!LATEX!
 Putting this into Newton's method,
-\\[
-    p\_{n+1} = p\_n + \\frac{f(p\_n)(p\_n - p\_{n-1})}{f(p\_n) - f(p\_{n-1})} .
-\\]
+!LATEX
+    p_{n+1} = p_n + \frac{f(p_n)(p_n - p_{n-1})}{f(p_n) - f(p_{n-1})} .
+!LATEX!
 This is the secant method.
 
 The secant method has an obvious advantage over Newton's method. It also has
@@ -441,77 +441,77 @@ and subtracting polynomials is easy. Furthermore, it makes it simple to do polyn
 long division, which is always slow. Finally, it allows for a way to evaluate
 polynomials at a value that is more numerically stable than the straight forward way.
 This evaluation method is known as Horner's method or synthetic division. Consider
-\\[
+!LATEX
     P(x) = a + bx + cx^2 + dx^3 .
-\\]
+!LATEX!
 You can evaluate it in this order:
-\\[
-    P(x) = a + x \\cdot (b + x\\cdot (c + x\\cdot (d))) .
-\\]
-That is Horner's method, It only requires \\(n\\) additions and multiplications,
-where \\(n\\) is the order of the polynomial. As a bonus, it is numerically
-more stable. Let \\(b\_k = a\_k + b\_{k+1}x\_0\\) for \\(k = n-1,n-2,\\ldots, 0\\)
-with \\(b\_n = a\_n\\) (\\(a\_k\\) is the \\(k\\)th coefficient of the polynomial).
-This is just formalizing Horner's method at \\(x\_0\\): every \\(b\\) is a step in the process.
-This means that \\(b\_0 = P(x\_0)\\). Now, if you make a polynomial
-\\[
-    Q(x) = b\_n x^{n-1} + b\_{n-1} x^{n-2} + \\ldots + b\_1 ,
-\\]
+!LATEX
+    P(x) = a + x \cdot (b + x\cdot (c + x\cdot (d))) .
+!LATEX!
+That is Horner's method, It only requires !LATEX inline n!LATEX! additions and multiplications,
+where !LATEX inline n!LATEX! is the order of the polynomial. As a bonus, it is numerically
+more stable. Let !LATEX inline b_k = a_k + b_{k+1}x_0!LATEX! for !LATEX inline k = n-1,n-2,\ldots, 0!LATEX!
+with !LATEX inline b_n = a_n!LATEX! (!LATEX inline a_k!LATEX! is the !LATEX inline k!LATEX!th coefficient of the polynomial).
+This is just formalizing Horner's method at !LATEX inline x_0!LATEX!: every !LATEX inline b!LATEX! is a step in the process.
+This means that !LATEX inline b_0 = P(x_0)!LATEX!. Now, if you make a polynomial
+!LATEX
+    Q(x) = b_n x^{n-1} + b_{n-1} x^{n-2} + \ldots + b_1 ,
+!LATEX!
 then
-\\[
-    P(x) = (x - x\_0)Q(x) + b\_0 .
-\\]
+!LATEX
+    P(x) = (x - x_0)Q(x) + b_0 .
+!LATEX!
 This is where the name synthetic division comes from: you are dividing a
 polynomial by a linear factor and getting a quotient and a remainder.
 
 Notice what differentiating does to this expression:
-\\[
-    P'(x) = Q(x) + (x - x\_0)Q'(x),
-\\]
+!LATEX
+    P'(x) = Q(x) + (x - x_0)Q'(x),
+!LATEX!
 so
-\\[
-    P'(x\_0) = Q(x\_0).
-\\]
+!LATEX
+    P'(x_0) = Q(x_0).
+!LATEX!
 This allows an optimization: the derivative and polynomial value
 at a point can be computed at the same time, first getting the
-\\(b\_k\\) then performing Horner's method on these to evaluate
-\\(Q\\) in the same loop. This makes Newton's method for polynomials
+!LATEX inline b_k!LATEX! then performing Horner's method on these to evaluate
+!LATEX inline Q!LATEX! in the same loop. This makes Newton's method for polynomials
 especially efficient.
 
 So you've seen the benefits of the coefficient representation. What are the
 downsides? Well, it can be much bigger than factored representations. Think about
-\\({(x + 2)}^{100}\\) in coefficient form. Another downside is that naive multiplication
-is \\(O(n^2)\\), assuming we're multiplying two polynomials of order \\(n\\). We can
-do better. Enter the point form of polynomials. You may know this, but \\(n\\) points
+!LATEX inline {(x + 2)}^{100}!LATEX! in coefficient form. Another downside is that naive multiplication
+is !LATEX inline O(n^2)!LATEX!, assuming we're multiplying two polynomials of order !LATEX inline n!LATEX!. We can
+do better. Enter the point form of polynomials. You may know this, but !LATEX inline n!LATEX! points
 on a polynomial completely determines the polynomial, assuming the polynomial degree
-is bounded to \\(n\\). Thus, you can represent a polynomial of degree bound \\(n\\)
-by its evaluation at \\(n\\) preset points, \\(x\_k\\). To multiply in point form,
-we have \\(C(x) = A(x)B(x) \\implies C(x\_k) = A(x\_k)B(x\_k)\\). This is
-\\(O(n)\\)!
+is bounded to !LATEX inline n!LATEX!. Thus, you can represent a polynomial of degree bound !LATEX inline n!LATEX!
+by its evaluation at !LATEX inline n!LATEX! preset points, !LATEX inline x_k!LATEX!. To multiply in point form,
+we have !LATEX inline C(x) = A(x)B(x) \implies C(x_k) = A(x_k)B(x_k)!LATEX!. This is
+!LATEX inline O(n)!LATEX!!
 
-So, a better algorithm for multiplying two order \\(n\\) polynomials is to
-change them to point form of order \\(2n\\) (the maximum order their product
-can be), do the \\(O(n)\\) multiplication, then convert back. Sadly, to evaluate
-\\(n\\) points with Horner's method, which is \\(O(n)\\), is \\(O(n^2)\\). Luckily,
-one can choose special points to evaluate the polynomial at: the \\(nth\\) roots
-of unity. What are those? They are the solutions to the equation \\(\\omega^n = 1\\).
-For example, the second roots of unity are \\(\\pm 1\\), and the fourth are
-\\(\\pm 1,\\pm i\\). These roots of unity have cyclic properties that makes them
+So, a better algorithm for multiplying two order !LATEX inline n!LATEX! polynomials is to
+change them to point form of order !LATEX inline 2n!LATEX! (the maximum order their product
+can be), do the !LATEX inline O(n)!LATEX! multiplication, then convert back. Sadly, to evaluate
+!LATEX inline n!LATEX! points with Horner's method, which is !LATEX inline O(n)!LATEX!, is !LATEX inline O(n^2)!LATEX!. Luckily,
+one can choose special points to evaluate the polynomial at: the !LATEX inline nth!LATEX! roots
+of unity. What are those? They are the solutions to the equation !LATEX inline \omega^n = 1!LATEX!.
+For example, the second roots of unity are !LATEX inline \pm 1!LATEX!, and the fourth are
+!LATEX inline \pm 1,\pm i!LATEX!. These roots of unity have cyclic properties that makes them
 useful as points. Using [Euler's formula](https://en.wikipedia.org/wiki/Euler%27s_formula),
 the roots of unity can easily be calculated. Furthermore, they can be entirely
 generated in a sequence from a "first" root of unity. Other circle-y properties
 give rise to the fast Fourier transform algorithm. Technically, this algorithm
 computes a discrete Fourier transform; however, it can be used to transform
-the coefficient representation to the point representation in \\(O(n \\log n)\\) time.
-Thus, we get \\(O(n \\log n)\\) polynomial multiplication! `bacon-sci` uses the classic
+the coefficient representation to the point representation in !LATEX inline O(n \log n)!LATEX! time.
+Thus, we get !LATEX inline O(n \log n)!LATEX! polynomial multiplication! `bacon-sci` uses the classic
 fft algorithm which requires the order to be a power of two, so I pad the coefficient
-representation to the nearest power of two that is larger than \\(2n\\). Thus,
+representation to the nearest power of two that is larger than !LATEX inline 2n!LATEX!. Thus,
 the multiplication requires a tolerance to get rid of leading zeros in the
 result. I store this tolerance within the polynomial. As a caveat, the roots of
 unity are complex by nature, so I do the automatic "upgrading" process from
 a possibly complex type to a complex type I mentioned earlier for the fft, and I do
 the "downgrading" process mentioned earlier for the reverse fft. Finally, I special
-cased multiplying by a constant polynomial or a linear polynomial to be \\(O(n)\\).
+cased multiplying by a constant polynomial or a linear polynomial to be !LATEX inline O(n)!LATEX!.
 This is because these operations are common in other algorithms and thus must be
 fast.
 
@@ -522,17 +522,17 @@ polynomials.
 
 To get to why these polynomials are special, we have to talk about the inner product.
 We can define a inner products between two functions from a set of functions in relation
-to a weighting function \\(w(x)\\) on an interval \\([a,b]\\) with
-\\[
-    {\\langle f, g\\rangle}\_w = \\int\_a^b f(x) g(x) w(x) \\,\\mathrm{d} x .
-\\]
-\\(a\\) can be \\(-\\infty\\), \\(b\\) can be \\(\\infty\\), but the inner product
+to a weighting function !LATEX inline w(x)!LATEX! on an interval !LATEX inline [a,b]!LATEX! with
+!LATEX
+    {\langle f, g\rangle}_w = \int_a^b f(x) g(x) w(x) \,\mathrm{d} x .
+!LATEX!
+!LATEX inline a!LATEX! can be !LATEX inline -\infty!LATEX!, !LATEX inline b!LATEX! can be !LATEX inline \infty!LATEX!, but the inner product
 between all functions in your set must be finite. Two functions are _orthogonal_
 if their inner product is zero. This concept is a generalization of the dot product.
 The dot product is
-\\[
-    \\vec{v} \\cdot \\vec{w} = \\sum\_n v\_n w\_n .
-\\]
+!LATEX
+    \vec{v} \cdot \vec{w} = \sum_n v_n w_n .
+!LATEX!
 Since functions have a continuum basis, the sum becomes an integral. Furthermore,
 we can throw in a weight function because the integral will still follow the rules
 from the dot product with it in there (think about how you can define norms in
@@ -547,71 +547,71 @@ polynomials are the complete orthogonal basis (but not necessarily orthonormal) 
 the space of functions on some definite interval.
 
 The first set of orthogonal polynomials are the Legendre polynomials. For this set,
-the weighting function is \\(w(x) = 1\\) and the interval is \\([-1,1]\\). They can
+the weighting function is !LATEX inline w(x) = 1!LATEX! and the interval is !LATEX inline [-1,1]!LATEX!. They can
 be defined with:
-\\[
-    P\_0 = 1,
-\\]
-\\[
-    P\_1 = x,
-\\]
-\\[
-    (n+1)P\_{n+1} = (2n+1) x P\_n - n P\_{n-1} .
-\\]
+!LATEX
+    P_0 = 1,
+!LATEX!
+!LATEX
+    P_1 = x,
+!LATEX!
+!LATEX
+    (n+1)P_{n+1} = (2n+1) x P_n - n P_{n-1} .
+!LATEX!
 
 The next set of orthogonal polynomials are the Hermite polynomials. For this set,
-the interval is \\((-\\infty,\\infty)\\), for which the most natural weighting function
-is \\(\\exp(-x^2)\\). There are actually two versions of Hermite polynomials. `bacon-sci` implements
+the interval is !LATEX inline (-\infty,\infty)!LATEX!, for which the most natural weighting function
+is !LATEX inline \exp(-x^2)!LATEX!. There are actually two versions of Hermite polynomials. `bacon-sci` implements
 the so-called physicist's Hermite polynomials instead of the statistician's Hermite
 polynomials. The kind implemented here can be defined with:
-\\[
-    H\_0 = 1,
-\\]
-\\[
-    H\_1 = 2x,
-\\]
-\\[
-    H\_{n+1} = 2 x H\_n - 2n H\_{n-1} .
-\\]
+!LATEX
+    H_0 = 1,
+!LATEX!
+!LATEX
+    H_1 = 2x,
+!LATEX!
+!LATEX
+    H_{n+1} = 2 x H_n - 2n H_{n-1} .
+!LATEX!
 
 The third set of orthogonal polynomials are the Laguerre polynomials. These are orthogonal
-on the interval \\([0,\\infty)\\) with the most natural weighting function
-\\(\\exp(-x)\\). Unlike the previous two, Laguerre polynomials can be found without
+on the interval !LATEX inline [0,\infty)!LATEX! with the most natural weighting function
+!LATEX inline \exp(-x)!LATEX!. Unlike the previous two, Laguerre polynomials can be found without
 a recurrence relation:
-\\[
-    L\_n = \\sum\_{k=0}^{n} \\binom{n}{k} \\frac{{(-1)}^k}{k!}x^k .
-\\]
+!LATEX
+    L_n = \sum_{k=0}^{n} \binom{n}{k} \frac{{(-1)}^k}{k!}x^k .
+!LATEX!
 
 Finally, `bacon-sci` currently also implements Chebyshev polynomials, which are polynomials
-relating to trigonometric functions. Consider \\(\\cos n\\theta\\). This can be expanded
-into a polynomial of \\(\\cos \\theta\\). Replace \\(\\cos \\theta\\) with \\(x\\) and
-you have the \\(n\\)th degree Chebyshev polynomial of the first kind. These polynomials
+relating to trigonometric functions. Consider !LATEX inline \cos n\theta!LATEX!. This can be expanded
+into a polynomial of !LATEX inline \cos \theta!LATEX!. Replace !LATEX inline \cos \theta!LATEX! with !LATEX inline x!LATEX! and
+you have the !LATEX inline n!LATEX!th degree Chebyshev polynomial of the first kind. These polynomials
 have the recurrence relation
-\\[
-    T\_0 = 1,
-\\]
-\\[
-    T\_1 = x,
-\\]
-\\[
-    T\_{n+1} = 2x T\_n - T\_{n-1} .
-\\]
-Likewise, you can expand \\(\\sin n\\theta\\) as \\(\\sin \\theta\\) times a
-polynomial term in \\(\\cos \\theta\\). Take that polynomial term and replace
-\\(\\cos \\theta\\) with \\(x\\) to get Chebyshev polynomials of the second kind,
+!LATEX
+    T_0 = 1,
+!LATEX!
+!LATEX
+    T_1 = x,
+!LATEX!
+!LATEX
+    T_{n+1} = 2x T_n - T_{n-1} .
+!LATEX!
+Likewise, you can expand !LATEX inline \sin n\theta!LATEX! as !LATEX inline \sin \theta!LATEX! times a
+polynomial term in !LATEX inline \cos \theta!LATEX!. Take that polynomial term and replace
+!LATEX inline \cos \theta!LATEX! with !LATEX inline x!LATEX! to get Chebyshev polynomials of the second kind,
 also defined by the recurrence relation
-\\[
-    U\_0 = 1,
-\\]
-\\[
-    U\_1 = 2x,
-\\]
-\\[
-    U\_{n+1} = 2x U\_n - U\_{n-1} .
-\\]
-Both kinds of Chebyshev polynomials are orthogonal polynomials on \\([-1,1]\\). The
-first kind polynomials have weight \\(1/\\sqrt{1 - x^2}\\) and the second
-kind polynomials have weight \\(\\sqrt{1 - x^2}\\).
+!LATEX
+    U_0 = 1,
+!LATEX!
+!LATEX
+    U_1 = 2x,
+!LATEX!
+!LATEX
+    U_{n+1} = 2x U_n - U_{n-1} .
+!LATEX!
+Both kinds of Chebyshev polynomials are orthogonal polynomials on !LATEX inline [-1,1]!LATEX!. The
+first kind polynomials have weight !LATEX inline 1/\sqrt{1 - x^2}!LATEX! and the second
+kind polynomials have weight !LATEX inline \sqrt{1 - x^2}!LATEX!.
 
 All of these special polynomials can be found under
 `bacon-sci::special`.
@@ -629,46 +629,46 @@ actually not very good at this task. Taylor series concentrate their accuracy on
 a single point, so they can only be relied on for approximating a function at values
 close to that point. This does not jive with our problem statement. Instead, we use
 what are known as Lagrange polynomials. To understand these, consider the case where
-we have 2 points: \\((x\_0, y\_0)\\) and \\((x\_1, y\_1)\\) of some function \\(f\\).
+we have 2 points: !LATEX inline (x_0, y_0)!LATEX! and !LATEX inline (x_1, y_1)!LATEX! of some function !LATEX inline f!LATEX!.
 Then, define
-\\[
-L\_0(x) = \\frac{x - x\_1}{x\_0 - x\_1}
-\\]
+!LATEX
+L_0(x) = \frac{x - x_1}{x_0 - x_1}
+!LATEX!
 and
-\\[
-L\_1(x) = \\frac{x - x\_0}{x\_1 - x\_0} .
-\\]
+!LATEX
+L_1(x) = \frac{x - x_0}{x_1 - x_0} .
+!LATEX!
 Now, we can define a polynomial
-\\[
-P(x) = L\_0 (x) y\_0 + L\_(x) y\_1 .
-\\]
-Notice that \\(L\_0(x\_0) = 1\\), \\(L\_0(x\_1) = 0\\),
-\\(L\_1(x\_0) = 0\\), and \\(L\_1(x\_1) = 1\\).
-Thus, \\(P(x\_0) = y\_0\\) and \\(P(x\_1) = y\_1\\), exactly
-as desired. \\(P\\) is the unique linear interpolation of the
+!LATEX
+P(x) = L_0 (x) y_0 + L_(x) y_1 .
+!LATEX!
+Notice that !LATEX inline L_0(x_0) = 1!LATEX!, !LATEX inline L_0(x_1) = 0!LATEX!,
+!LATEX inline L_1(x_0) = 0!LATEX!, and !LATEX inline L_1(x_1) = 1!LATEX!.
+Thus, !LATEX inline P(x_0) = y_0!LATEX! and !LATEX inline P(x_1) = y_1!LATEX!, exactly
+as desired. !LATEX inline P!LATEX! is the unique linear interpolation of the
 function for these points! This is an order two Lagrange
 interpolation. In general, to interpolate with a polynomial of
-degree \\(n\\),
-\\[
-    L\_{n,k} = \\frac{(x - x\_0) \\ldots (x - x\_{k-1})(x - x\_{k+1})\\ldots (x - x\_n)}
-    {(x\_k - x\_0) \\ldots (x\_k - x\_{k - 1})(x\_k - x\_{k+1}) \\ldots (x\_k - x\_n)},
-\\]
+degree !LATEX inline n!LATEX!,
+!LATEX
+    L_{n,k} = \frac{(x - x_0) \ldots (x - x_{k-1})(x - x_{k+1})\ldots (x - x_n)}
+    {(x_k - x_0) \ldots (x_k - x_{k - 1})(x_k - x_{k+1}) \ldots (x_k - x_n)},
+!LATEX!
 or
-\\[
-    L\_{n,k} = \\prod\_{i \neq k}^{n} \\frac{x - x\_i}{x\_k - x\_i} .
-\\]
+!LATEX
+    L_{n,k} = \prod_{i \neq k}^{n} \frac{x - x_i}{x_k - x_i} .
+!LATEX!
 Then, the Lagrange interpolating polynomial is
-\\[
-    P(x) = \\sum_{i=0}^{n} y\_i L\_{n,i}(x) .
-\\]
+!LATEX
+    P(x) = \sum_{i=0}^{n} y_i L_{n,i}(x) .
+!LATEX!
 
 There is a slight problem implementing the above definition in code: a lot of work
-needs to be redone. An order \\(n\\) interpolating polynomial can be built up
+needs to be redone. An order !LATEX inline n!LATEX! interpolating polynomial can be built up
 gradually from lower orders by taking different points at a time. This work can
 be cached in a table to avoid re-doing things. Calculating the polynomial in this
 way is known as Neville's method and is what `bacon-sci` does.
 
-Now, what if you have more information about \\(f\\)? For example, what if you have
+Now, what if you have more information about !LATEX inline f!LATEX!? For example, what if you have
 the derivative at all of your points as well? This is a generalization of Lagrange
 interpolation. For the case the first derivatives are known, the interpolating
 polynomial is called the Hermite interpolating polynomial. `bacon-sci` implements this,
@@ -695,20 +695,20 @@ are implemented under `bacon_sci::interp`.
 
 Sometimes, we want to numerically find a derivative of a function. Taking a look
 at the definition of a derivative,
-\\[
-    f'(x\_0) = \\lim\_{h \\rightarrow 0} \\frac{f(x\_0 + h) - f(x\_0)}{h},
-\\]
-there is a simple solution: just pick some small \\(h\\); however, this approach
+!LATEX
+    f'(x_0) = \lim_{h \rightarrow 0} \frac{f(x_0 + h) - f(x_0)}{h},
+!LATEX!
+there is a simple solution: just pick some small !LATEX inline h!LATEX!; however, this approach
 is not good because subtracting two close values is prone to round off error. Instead,
 we can estimate the derivative by doing Lagrange interpolation on several points. Using
 four interpolating points, we can get the so-called five point formula:
-\\[
-    f'(x\_0) \\approx \\frac{1}{12h} \\left(f(x\_0 - 2h)  -8f(x\_0 - h) + 8f(x\_0 + h) - f(x\_0 + 2h) \\right) .
-\\]
+!LATEX
+    f'(x_0) \approx \frac{1}{12h} \left(f(x_0 - 2h)  -8f(x_0 - h) + 8f(x_0 + h) - f(x_0 + 2h) \right) .
+!LATEX!
 We can also do higher derivatives this way. For example,
-\\[
-    f''(x\_0) \\approx \\frac{1}{h^2} \\left(f(x\_0 - h) - 2f(x\_0) + f(x\_0 + h)\\right)
-\\]
+!LATEX
+    f''(x_0) \approx \frac{1}{h^2} \left(f(x_0 - h) - 2f(x_0) + f(x_0 + h)\right)
+!LATEX!
 
 Numerical differentiation is implemented under
 `bacon_sci::differentiate`.
@@ -732,22 +732,22 @@ the right- and left-rectangle rules:
 ![left-rectangle rule](/imgs/left_rectangle.png)
 
 Mathematically, this becomes
-\\[
-    \\int\_a^b f(x)\\,\\mathrm{d}x \\approx (b - a)f(b)
-\\]
+!LATEX
+    \int_a^b f(x)\,\mathrm{d}x \approx (b - a)f(b)
+!LATEX!
 and
-\\[
-    \\int\_a^b f(x)\\,\\mathrm{d}x \\approx (b - a)f(a) .
-\\]
+!LATEX
+    \int_a^b f(x)\,\mathrm{d}x \approx (b - a)f(a) .
+!LATEX!
 
 A better approach is to use the trapezoidal rule:
 
 ![trapezoidal rule](/imgs/trapezoid.png)
 
 Mathematically, this is
-\\[
-    \\int\_a^b f(x)\\,\\mathrm{d}x \\approx \\frac{b - a}{2}\\left(f(a) + f(b)\\right) .
-\\]
+!LATEX
+    \int_a^b f(x)\,\mathrm{d}x \approx \frac{b - a}{2}\left(f(a) + f(b)\right) .
+!LATEX!
 There is also Simpson's rule, which uses an approximating parabola instead.
 
 An easy way to improve accuracy is to break the interval up into smaller subintervals, turning
@@ -755,10 +755,10 @@ a rule into a composite rule like so:
 
 ![composite trapezoidal rule](/imgs/composite_trapezoid.png)
 
-Mathematically, the composite trapezoidal rule is with step size \\(h\\) is:
-\\[
-    \\int_a^b f(x)\\,\\mathrm{d}x \\approx \\frac{h}{2}\\left(f(a) + f(b)\\right) + h\\sum\_1^{n-1} f(a + nh) .
-\\]
+Mathematically, the composite trapezoidal rule is with step size !LATEX inline h!LATEX! is:
+!LATEX
+    \int_a^b f(x)\,\mathrm{d}x \approx \frac{h}{2}\left(f(a) + f(b)\right) + h\sum_1^{n-1} f(a + nh) .
+!LATEX!
 This takes the form because each intermediate step is part of two trapezoids, the left
 trapezoid and the right trapezoid, canceling out the half.
 This rule is easily interleaved to use in adaptive quadrature. To half the step size,
@@ -774,34 +774,34 @@ implementing this adaptive Simpson's rule.
 Generally, Simpson's rule is better than the trapezoidal rule; however, it turns out
 that the trapezoidal rule is particularly good when the integrand decays double
 exponentially towards the end points (that is, decays as fast as
-\\(\\exp(\\exp(x))\\)). Taking advantage of this, we can do a variable
-substitution to integrate over the interval \\([-1, 1]\\) (Any two-sided closed interval
+!LATEX inline \exp(\exp(x))!LATEX!). Taking advantage of this, we can do a variable
+substitution to integrate over the interval !LATEX inline [-1, 1]!LATEX! (Any two-sided closed interval
 can be changed to this one using another simple change of variable). A good change
 of variable to choose is
-\\[
-    x = \\tanh\\left(\\frac{\\pi}{2}\\sinh t\\right),
-\\]
+!LATEX
+    x = \tanh\left(\frac{\pi}{2}\sinh t\right),
+!LATEX!
 using [hyperbolic trig functions](https://en.wikipedia.org/wiki/Hyperbolic_functions).
-This changes the interval to \\((-\\infty, \\infty)\\), pushing the end points out,
+This changes the interval to !LATEX inline (-\infty, \infty)!LATEX!, pushing the end points out,
 so this gives an integration technique not sensitive to end point behavior. In the
 future, `bacon-sci` could use this to make integration functions where one or both
 endpoints have a singularity in the integrand.
 This change of variable changes the integral to
-\\[
-\\int\_{-1}^1 f(x)\\,\\mathrm{d}x \\approx \\sum\_{-\\infty}^\\infty w\_k f(x\_k),
-\\]
+!LATEX
+\int_{-1}^1 f(x)\,\mathrm{d}x \approx \sum_{-\infty}^\infty w_k f(x_k),
+!LATEX!
 where
-\\[
-    x\_k = \\tanh\\left(\\frac{\\pi}{2}\\sinh kh \\right)
-\\]
+!LATEX
+    x_k = \tanh\left(\frac{\pi}{2}\sinh kh \right)
+!LATEX!
 and
-\\[
-    w\_k = \\frac{\\frac{h}{2}\\pi \\cosh kh}{\\cosh^2\\left(\\frac{\\pi}{2}\\sinh kh\\right)} .
-\\]
+!LATEX
+    w_k = \frac{\frac{h}{2}\pi \cosh kh}{\cosh^2\left(\frac{\pi}{2}\sinh kh\right)} .
+!LATEX!
 This evaluates the transformed integral using the trapezoidal rule. Since the decay
 is double exponential, the limits on the sum can be made finite without much loss of
 precision. In `bacon-sci`, the sum is done from -3 to 3, which is correct within
-\\(1 \times 10^{-12}\\).  For example, the transformed function from before looks like:
+!LATEX inline 1 \times 10^{-12}!LATEX!.  For example, the transformed function from before looks like:
 
 ![tanh-sinh integration](/imgs/tanhsinh.png)
 
@@ -826,17 +826,17 @@ highest degree polynomial possible as an integrand is perfectly calculated.
 Much like the section on special polynomials, Gaussian integration rules
 are determined by an interval and a weighting function. In general, the question
 is, what are the optimal points to evaluate to numerically integrate:
-\\[
-    \\int\_a^b f(x) w(x) \\,\\mathrm{d}x ?
-\\]
-As it turns out, the optimal \\(n\\) points are the zeros of the \\(nth\\) classical
-orthogonal polynomial on the interval \\([a,b]\\) with weighting function
-\\(w(x)\\) as defined in the Special Polynomials section.
+!LATEX
+    \int_a^b f(x) w(x) \,\mathrm{d}x ?
+!LATEX!
+As it turns out, the optimal !LATEX inline n!LATEX! points are the zeros of the !LATEX inline nth!LATEX! classical
+orthogonal polynomial on the interval !LATEX inline [a,b]!LATEX! with weighting function
+!LATEX inline w(x)!LATEX! as defined in the Special Polynomials section.
 
 For general purpose integrals, the best interval is, like in Tanh-Sinh quadrature,
-\\([-1,1]\\). This becomes Gaussian-Legendre quadrature. You can also integrate over
-\\([0,\\infty)\\) with Gaussian-Laguerre quadrature and
-\\((-\\infty,\\infty)\\) with Gaussian-Hermite quadrature using the most natural
+!LATEX inline [-1,1]!LATEX!. This becomes Gaussian-Legendre quadrature. You can also integrate over
+!LATEX inline [0,\infty)!LATEX! with Gaussian-Laguerre quadrature and
+!LATEX inline (-\infty,\infty)!LATEX! with Gaussian-Hermite quadrature using the most natural
 weighting functions. In addition, `bacon-sci` provides both kinds of Chebyshev-Guassian
 quadrature. All of these integration functions can be done within a specified tolerance.
 Furthermore, all of the weighting function and polynomial zero evaluations are done
