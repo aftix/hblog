@@ -251,21 +251,16 @@ and use it in an implicit method of the same order. These techniques are known
 as predictor-corrector methods.
 
 Finally, I can talk about the implementation of `bacon-sci`. In my crate, I have a
-`trait IVPSolver` that defines everything I want an IVP solver to be. I have one direct
-implementation, `Euler`. On top of that, I have a `struct AdamsInfo` and `struct RKInfo` that
-implement `IVPSolver` for general predictor-corrector methods and adaptive runge-kutta methods
-respectively. Then, I have traits `RungeKuttaSolver` and `AdamsSolver` that specify
-which coefficients are needed and how to interact with `RKInfo` and `AdamsInfo`. I have
-specified the Runge-Kutta-Fehlberg method and a fifth order predictor-corrector method
-within `bacon-sci` for the end user. They are built using builder functions after a `new` call.
-
-Why do I need the `*Info` structs? Why can't I just `impl<T: RungeKuttaSolver> IVPSolver for T`,
-so runge-kutta implementors only need to define the coefficients? Well, doing that wildcard
-implementation conflicts with `Euler`. Rust isn't smart enough to know that since
-my crate has control over both `Euler` and `RungeKuttaSolver`, downstream crates
-can not possible implement `RungeKuttaSolver` for `Euler`. Furthermore, the wildcard
-implementations would conflict on possible downstream types implementing `RungeKuttaSolver`
-and `AdamsSolver`.
+`trait IVPSolver` that defines everything I want an IVPSolver to be. The trait specifies a builder-style API
+for making a solver, giving a method to turn the solver into a normal rust iterator at the end (plus a
+convienence function for collecting into a result containing a vector).
+I have one direct implementation, `Euler`. On top of that, I have `Adams`, `BDF`, and `RungeKutta` structs
+implement `IVPSolver` based on a generic parameter defining the order of the method.
+This is possible since each class of method uses the same algorithm, regardless of order,
+just with different constants. Thus, I have the traits `AdamsCoefficients`, etc., that specify
+which constants are needed for each method, and type aliases for the main solving structs that fill out
+the required generic parameter. This means the user will be able to use `Adams5` to get an `Adams`
+struct filled with the correct 5th-order constants, making it easy to use and making development easier, too!
 
 What else is there for `bacon-sci`? Well, there exist methods known an backwards differentiation
 formulas which are very useful for differential equations the aforementioned methods
@@ -276,34 +271,29 @@ Well, stay tuned!
 
 The theory is all well and good, but how do you solve an initial value
 problem with `bacon-sci`? There are currently seven implemented solvers in
-the library: `RK45`, `RK23`, `Adams`, `Adams2`, `BDF`, `BDF2`, and `Euler`. As mentioned
+the library: `RungeKutta45`, `RungeKutta23`, `Adams5`, `Adams2`, `BDF6`, `BDF2`, and `Euler`. As mentioned
 previously, `IVPSolver` is a trait, so all of these solvers have a shared interface. For this
-example, I'll solve a one-dimensional problem with !LATEX~ y(0) = 0!LATEX! using `RK45`. The derivative
-function (that is, !LATEX~ f(t, y)!LATEX! is of the form: `fn deriv<T>(t: f64, y: &[f64], params: &mut T) -> Result<VectorN<f64, U1>, String> { ... }`.
+example, I'll solve a one-dimensional problem with !LATEX~ y(0) = 0!LATEX! using `RungeKutta45`. The derivative
+function (that is, !LATEX~ f(t, y)!LATEX! is of the form: `fn deriv<T>(t: f64, y: &[f64], params: &mut T) -> Result<SVector<f64, 1>, Box<dyn Error>> { ... }`.
 Here, I am using `f64` for both `t` and `y`, but `f32` would work as well (you can even
 have `y` be a `Complex<{float}>` type with `t` being the corresponding real
 float type). In this case, you'd solve the initial value problem in a manner
 such as:
 ```rust
-fn solve() -> Result<(), String> {
-    let mut rk = RK45::new()
-        .with_dt_min(0.01)?
-        .with_dt_max(0.1)?
+fn solve() -> Result<SVector<f64, 1>, IVPError> {
+    let mut rk = RungeKutta45::new()
+        .with_minimum_dt(0.01)?
+        .with_maximum_dt(0.1)?
         .with_tolerance(1e-3)?
-        .with_start(0.0)?
-        .with_end(1.0)?
-        .with_initial_conditions(&[1.0])?
-        .build();
-    let path = rk.solve_ivp(deriv, &mut ());
+        .with_initial_time(0.0)?
+        .with_ending_time(1.0)?
+        .with_initial_conditions_slice(&[1.0])?
+        .with_derivative(deriv)
+        .solve(())?;
 
-    Ok(())
+    rk.collect_vec()
 }
 ```
-
-`bacon-sci` also has a general-purpose function `solve_ivp` which tries
-to solve an initial value problem with a fourth-order Adams predictor-corrector,
-then the Runge-Kutta-Fehlberg method, and finally with adaptive BDF6. This is the
-function you'll probably want to use.
 
 ## Root finding
 
