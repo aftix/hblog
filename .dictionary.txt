@@ -82,6 +82,11 @@ Müller's
 Laguerre's
 Thusly
 BDF
+IVPSolver
+RungeKutta
+AdamsCoefficients
+Adams5
+iterator
 Fehlberg
 Kutta
 Runge
@@ -117,3 +122,4 @@ NumPy
 MatLab
 bingsu
 mL
+
