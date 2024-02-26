@@ -274,13 +274,14 @@ problem with `bacon-sci`? There are currently seven implemented solvers in
 the library: `RungeKutta45`, `RungeKutta23`, `Adams5`, `Adams2`, `BDF6`, `BDF2`, and `Euler`. As mentioned
 previously, `IVPSolver` is a trait, so all of these solvers have a shared interface. For this
 example, I'll solve a one-dimensional problem with !LATEX~ y(0) = 0!LATEX! using `RungeKutta45`. The derivative
-function (that is, !LATEX~ f(t, y)!LATEX! is of the form: `fn deriv<T>(t: f64, y: &[f64], params: &mut T) -> Result<SVector<f64, 1>, Box<dyn Error>> { ... }`.
+function (that is, !LATEX~ f(t, y)!LATEX! is of the form: `fn deriv<T>(t: f64, y: &[f64], params: &mut T) -> Result<BVector<f64, 1>, Box<dyn Error>> { ... }`.
 Here, I am using `f64` for both `t` and `y`, but `f32` would work as well (you can even
 have `y` be a `Complex<{float}>` type with `t` being the corresponding real
 float type). In this case, you'd solve the initial value problem in a manner
 such as:
 ```rust
-fn solve() -> Result<SVector<f64, 1>, IVPError> {
+use bacon_sci::{prelude::*, ivp::{IVPSolver, IVPError, rk::RungeKutta45}};
+fn solve() -> Result<BSVector<f64, 1>, IVPError> {
     let mut rk = RungeKutta45::new()
         .with_minimum_dt(0.01)?
         .with_maximum_dt(0.1)?
