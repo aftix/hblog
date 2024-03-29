@@ -1,6 +1,0 @@
-[submodule "themes/ghostwriter"]
-	path = themes/ghostwriter
-	url = https://github.com/jbub/ghostwriter
-[submodule "themes/github.com/KaTeX/KaTeX"]
-	path = themes/github.com/KaTeX/KaTeX
-	url = https://github.com/katex/katex

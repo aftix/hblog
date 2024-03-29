@@ -12,15 +12,13 @@ jobs:
     name: Deploy blog to site
     runs-on: ubuntu-latest
     if: github.event.workflow_run.conclusion == 'success'
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
         with:
-          submodules: recursive
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: DeterminateSystems/magic-nix-cache-action@main
 
       - name: Create ssh key from repository secret
         run: |
@@ -29,39 +27,18 @@ jobs:
       - name: Add blog site fingerprint to known ssh hosts
         run: ssh-keyscan -H aftix.xyz > ~/.ssh/known_hosts
 
-      - name: Setup docker buildx
-        uses: docker/setup-buildx-action@v2
-        with:
-          platforms: linux/amd64
-          driver-opts: network=host
-
-      - name: Build docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: localhost:5000/aftix/hblog:latest
-
-      - name: Make output directory
-        run: mkdir aftix.xyz
-
       - name: Build site
         run: >
-          docker run --rm --platform=linux/amd64
-          -v "$(realpath ./aftix.xyz):/public"
-          localhost:5000/aftix/hblog:latest
-          'yarn && yarn run tsc && yarn run render && hugo -d "/public"'
-
-      - name: Archive output directory
-        run: >
-          tar cvf site.tar.gz aftix.xyz/
+          nix build '.#packages.x86_64-linux.default'
 
       - name: Deploy site
         run: |
-          scp site.tar.gz "www-data@aftix.xyz:~/site.tar.gz"
-          ssh "www-data@aftix.xyz" 'sh -ls' <<< "$SCRIPT"
+          scp result/site.tar.bz2 "www@aftix.xyz:/srv/site.tar.bz2"
+          ssh "www@aftix.xyz" 'sh -ls' <<< "$SCRIPT"
         env:
           SCRIPT: >-
-            cd $HOME ;
-            tar xvf site.tar.gz ;
-            rm site.tar.gz
+            cd /srv ;
+            tar xvf site.tar.bz2 ;
+            rm site.tar.bz2 ; 
+            rm -rf aftix.xyz ;
+            mv public aftix.xyz
