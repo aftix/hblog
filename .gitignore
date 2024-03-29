@@ -1,7 +1,6 @@
 public/
 .hugo_build.lock
 .markdown.dict
-yarn.lock
 node_modules/
 layouts/partials/rendered-latex
 content/post/bacon.md
