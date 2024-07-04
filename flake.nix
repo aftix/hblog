@@ -13,7 +13,13 @@
     ...
   }:
     flake-utils.lib.eachDefaultSystem (system: let
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = import nixpkgs {
+        inherit system;
+        config.allowUnfreePredicate = pkg:
+          builtins.elem (nixpkgs.lib.getName pkg) [
+            "aspell-dict-en-science"
+          ];
+      };
 
       ghostwriter = pkgs.fetchFromGitHub {
         owner = "jbub";
@@ -28,6 +34,35 @@
         rev = "f93464644419ef0057cc5b314f81e439f1242935";
         hash = "sha256-JCWc7yb6u5Nq9WRe/c46wRcBivLkBxU4wND0ZoCcqts=";
       };
+
+      aspell-dicts =
+        pkgs.aspellWithDicts (dicts: with dicts; [en en-science en-computers]);
+      # Add a wrapper around the aspell binary that sets the right data-dir
+      # This is because pyspelling calls the binary directly and doesn't work with
+      # ASPELL_CONF
+      aspell =
+        pkgs.runCommandWith {
+          name = "aspell-env";
+          stdenv = pkgs.stdenvNoCC;
+          runLocal = true;
+          derivationArgs = {
+            src = aspell-dicts;
+            nativeBuildInputs = [pkgs.makeBinaryWrapper];
+          };
+        }
+        /*
+        bash
+        */
+        ''
+          mkdir -p "$out/bin"
+          echo "Wrapping $src/bin/aspell"
+          makeWrapper "$src/bin/aspell" "$out/bin/aspell" \
+            --add-flags "--data-dir" \
+            --add-flags "$out/lib/aspell"
+          cp -vR --update=none "$src/"* "$out"
+        '';
+
+      pyspelling = pkgs.python312Packages.callPackage ./pyspelling.nix {};
     in {
       packages = rec {
         katex-gen = pkgs.mkYarnPackage {
@@ -96,6 +131,8 @@
           };
         };
         default = hblog;
+
+        inherit pyspelling aspell;
       };
 
       devShells.default = pkgs.mkShell {
@@ -107,7 +144,32 @@
           nodejs
           yarn
           just
+          pyspelling
+          (pkgs.aspellWithDicts
+            (d: with d; [en en-science en-computers]))
         ];
+      };
+
+      checks = {
+        spelling = pkgs.stdenv.mkDerivation {
+          name = "check-spelling";
+          src = ./.;
+
+          dontBuild = true;
+          doCheck = true;
+
+          nativeBuildInputs = [
+            pyspelling
+            aspell
+          ];
+
+          checkPhase = ''
+            export ASPELL_DICT_DIR="${aspell}/lib/aspell"
+            pyspelling -c .spellcheck.yml
+          '';
+
+          installPhase = "touch $out";
+        };
       };
     });
 }
