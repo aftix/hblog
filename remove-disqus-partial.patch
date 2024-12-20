@@ -1,0 +1,22 @@
+--- a/layouts/partials/disqus.html
++++ /dev/null
+@@ -1,5 +0,0 @@
+-{{ if .Site.DisqusShortname }}
+-    <div class="comments">
+-        {{ template "_internal/disqus.html" . }}
+-    </div>
+-{{ end }}
+\ No newline at end of file
+diff --git a/layouts/post/single.html b/layouts/post/single.html
+index 146a1ab..8d28dee 100644
+--- a/layouts/post/single.html
++++ b/layouts/post/single.html
+@@ -7,8 +7,6 @@
+         {{ partial "post-content.html" . }}
+ 
+         {{ partial "post-footer.html" . }}
+-
+-        {{ partial "disqus.html" . }}
+     </article>
+ </div>
+ 
