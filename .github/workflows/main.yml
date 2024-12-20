@@ -2,10 +2,12 @@ name: Deploy blog
 
 on:
   workflow_run:
-    workflows: ['Spellcheck']
-    branches: ['master']
+    workflows: [Spellcheck]
+    branches: [master]
     types:
       - completed
+  push:
+    branches: [master]
 
 jobs:
   deploy:
