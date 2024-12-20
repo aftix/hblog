@@ -106,14 +106,24 @@
 
           src = ./.;
 
+          disqusPatch = ./remove-disqus-partial.patch;
+
+          patchPhase = ''
+            mkdir -p themes/ghostwriter
+            mkdir -p themes/github.com/KaTeX/KaTeX
+            cp -vLR "${ghostwriter}/"* themes/ghostwriter
+            cp -vLR "${katex}/"* themes/github.com/KaTeX/KaTeX
+            chmod -R +w themes
+
+            pushd themes/ghostwriter
+            patch -p1 < "$disqusPatch"
+            popd
+          '';
+
           buildPhase = ''
             rm -rf content/ layouts/
             cp -vR "${katex-gen}/content" content
             cp -vR "${katex-gen}/layouts" layouts
-            mkdir -p themes/ghostwriter
-            mkdir -p themes/github.com/KaTeX/KaTeX
-            cp -vR "${ghostwriter}/"* themes/ghostwriter
-            cp -vR "${katex}/"* themes/github.com/KaTeX/KaTeX
             mkdir -p public
             hugo -d public
           '';
