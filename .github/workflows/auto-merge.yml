@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: alexwilson/enable-github-automerge-action@main
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.MERGE_PAT_TOKEN }}"
 
   enable-auto-merge-on-create:
     runs-on: ubuntu-latest
@@ -25,4 +25,4 @@ jobs:
     steps:
       - uses: alexwilson/enable-github-automerge-action@main
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.MERGE_PAT_TOKEN }}"
