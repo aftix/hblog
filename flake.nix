@@ -99,7 +99,6 @@
           version = "1.0.0";
 
           buildInputs = with pkgs; [
-            bzip2
             katex-gen
             hugo
           ];
@@ -130,9 +129,7 @@
 
           installPhase = ''
             mkdir -p "$out"
-            tar cvf site.tar public/
-            bzip2 -z site.tar
-            mv site.tar.bz2 "$out/."
+            cp -vR "public/"* "$out"
           '';
 
           meta = with pkgs.lib; {
@@ -140,7 +137,21 @@
             license = licenses.mit;
           };
         };
-        default = hblog;
+        hblog-archive =
+          pkgs.runCommandNoCC "hblog-archive" {
+            src = hblog;
+            buildInputs = [pkgs.bzip2];
+          }
+          /*
+          bash
+          */
+          ''
+            mkdir -p "$out"
+            tar cvf site.tar "$src"
+            bzip2 -z site.tar
+            mv site.tar.bz2 "$out/."
+          '';
+        default = hblog-archive;
 
         inherit pyspelling aspell;
       };
