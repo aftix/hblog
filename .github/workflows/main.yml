@@ -39,7 +39,8 @@ jobs:
         env:
           SCRIPT: >-
             cd /srv ;
-            tar xvf site.tar.bz2 ;
-            rm site.tar.bz2 ; 
             rm -rf aftix.xyz ;
-            mv public aftix.xyz
+            mkdir aftix.xyz ;
+            cd aftix.xyz ;
+            tar xvf ../site.tar.bz2 ;
+            rm ../site.tar.bz2
