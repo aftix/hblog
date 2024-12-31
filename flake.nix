@@ -146,10 +146,9 @@
           bash
           */
           ''
-            mkdir -p "$out"
-            tar cvf site.tar "$src"
+            tar -hcvf site.tar --directory="$src" .
             bzip2 -z site.tar
-            mv site.tar.bz2 "$out/."
+            mv site.tar.bz2 "$out"
           '';
         default = hblog-archive;
 
