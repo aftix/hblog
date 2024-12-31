@@ -34,7 +34,7 @@ jobs:
 
       - name: Deploy site
         run: |
-          scp result/site.tar.bz2 "www@aftix.xyz:/srv/site.tar.bz2"
+          scp result "www@aftix.xyz:/srv/site.tar.bz2"
           ssh "www@aftix.xyz" 'sh -ls' <<< "$SCRIPT"
         env:
           SCRIPT: >-
@@ -43,4 +43,5 @@ jobs:
             mkdir aftix.xyz ;
             cd aftix.xyz ;
             tar xvf ../site.tar.bz2 ;
+            chmod -R +w . ;
             rm ../site.tar.bz2
